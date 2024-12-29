@@ -20,14 +20,14 @@ function generateQRCode() {
     const qrCodeContainer = document.getElementById('qrCode');
     qrCodeContainer.innerHTML = ''; // Clear any existing QR code
 
-    // Generate QR Code
-    new QRCode(qrCodeContainer, {
-        text: upiURL,
+    // Generate QR Code using the correct method
+    QRCode.toCanvas(qrCodeContainer, upiURL, {
         width: 256,
         height: 256,
+    }, function (error) {
+        if (error) console.error(error);
+        console.log("QR Code generated!");
     });
-
-    console.log("Generated QR Code for:", upiURL);
 }
 
 // Populate fields and generate QR on page load if parameters exist
