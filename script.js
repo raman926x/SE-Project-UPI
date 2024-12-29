@@ -1,27 +1,25 @@
-document.getElementById("generateQR").addEventListener("click", function () {
-    const upiID = document.getElementById("upiID").value.trim();
-    const amount = document.getElementById("amount").value.trim();
-    const qrCodeDiv = document.getElementById("qrCode");
-  
-    // Clear any existing QR code
-    qrCodeDiv.innerHTML = "";
-  
-    if (!upiID || !amount) {
-      alert("Please enter both UPI ID and amount.");
-      return;
+// Autofill UPI ID and Amount from URL parameters
+function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        upiId: params.get('upiId'),
+        amount: params.get('amount')
+    };
+}
+
+window.onload = () => {
+    const { upiId, amount } = getQueryParams();
+
+    if (upiId) {
+        document.getElementById('upiId').value = upiId;
     }
-  
-    // Create the UPI payment string
-    const upiString = `upi://pay?pa=${upiID}&am=${amount}`;
-  
-    // Generate the QR code
-    QRCode.toCanvas(upiString, { width: 200 }, function (error, canvas) {
-      if (error) {
-        console.error(error);
-        alert("Failed to generate QR Code.");
-        return;
-      }
-      qrCodeDiv.appendChild(canvas);
-    });
-  });
-  
+
+    if (amount) {
+        document.getElementById('amount').value = amount;
+    }
+
+    // Automatically generate QR if both fields are prefilled
+    if (upiId && amount) {
+        generateQRCode(); // Call the QR generation function
+    }
+};
