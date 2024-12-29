@@ -1,5 +1,5 @@
-// On page load, extract URL parameters, populate the fields, and generate the QR code
-window.onload = function() {
+// On page load, extract URL parameters, populate fields, and auto-generate QR if applicable
+window.onload = function () {
   const urlParams = new URLSearchParams(window.location.search);
   const upiID = urlParams.get("upiId");
   const amount = urlParams.get("amount");
@@ -12,13 +12,13 @@ window.onload = function() {
     document.getElementById("amount").value = amount;
   }
 
-  // Automatically generate the QR code if both fields are filled
+  // Automatically generate the QR code if fields are pre-filled
   if (upiID && amount) {
     generateQRCode();
   }
 };
 
-// Generate the QR code when the button is clicked or on page load
+// Function to generate QR code
 function generateQRCode() {
   const upiID = document.getElementById("upiID").value.trim();
   const amount = document.getElementById("amount").value.trim();
@@ -45,3 +45,6 @@ function generateQRCode() {
     qrCodeDiv.appendChild(canvas);
   });
 }
+
+// Add click event listener for manual QR generation
+document.getElementById("generateQR").addEventListener("click", generateQRCode);
