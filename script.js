@@ -21,10 +21,7 @@ function generateQRCode() {
     qrCodeContainer.innerHTML = ''; // Clear any existing QR code
 
     // Generate QR Code using the correct method
-    QRCode.toCanvas(qrCodeContainer, upiURL, {
-        width: 256,
-        height: 256,
-    }, function (error) {
+    QRCode.toCanvas(qrCodeContainer, upiURL, { width: 256, height: 256 }, function (error) {
         if (error) console.error(error);
         console.log("QR Code generated!");
     });
@@ -47,6 +44,3 @@ window.onload = () => {
         generateQRCode();
     }
 };
-
-// Add click event listener to the "Generate QR Code" button
-document.getElementById('generateQR').addEventListener('click', generateQRCode);
