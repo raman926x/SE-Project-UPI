@@ -1,46 +1,43 @@
-// Extract URL parameters and decode them
-function getQueryParams() {
-    const params = new URLSearchParams(window.location.search);
-    const upiId = params.get('upiId') ? decodeURIComponent(params.get('upiId')) : '';
-    const amount = params.get('amount') ? decodeURIComponent(params.get('amount')) : '';
-    return { upiId, amount };
-}
-
-// Generate the QR Code
-function generateQRCode() {
-    const upiId = document.getElementById('upiId').value.trim();
-    const amount = document.getElementById('amount').value.trim();
-
-    if (!upiId || !amount) {
-        alert("Please provide both UPI ID and amount to generate the QR code.");
-        return;
+// On page load, extract URL parameters and populate the fields
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const upiID = urlParams.get("upiId");
+    const amount = urlParams.get("amount");
+  
+    if (upiID) {
+      document.getElementById("upiID").value = upiID;
     }
-
-    const upiURL = `upi://pay?pa=${upiId}&am=${amount}`;
-    const qrCodeContainer = document.getElementById('qrCode');
-    qrCodeContainer.innerHTML = ''; // Clear any existing QR code
-
-    // Generate QR Code using the correct method
-    QRCode.toCanvas(qrCodeContainer, upiURL, { width: 256, height: 256 }, function (error) {
-        if (error) console.error(error);
-        console.log("QR Code generated!");
-    });
-}
-
-// Populate fields and generate QR on page load if parameters exist
-window.onload = () => {
-    const { upiId, amount } = getQueryParams();
-
-    // Populate form fields if values are present
-    if (upiId) {
-        document.getElementById('upiId').value = upiId;
-    }
+  
     if (amount) {
-        document.getElementById('amount').value = amount;
+      document.getElementById("amount").value = amount;
     }
-
-    // Automatically generate QR Code if both fields are filled
-    if (upiId && amount) {
-        generateQRCode();
+  };
+  
+  // Generate the QR code when the button is clicked
+  document.getElementById("generateQR").addEventListener("click", function () {
+    const upiID = document.getElementById("upiID").value.trim();
+    const amount = document.getElementById("amount").value.trim();
+    const qrCodeDiv = document.getElementById("qrCode");
+  
+    // Clear any existing QR code
+    qrCodeDiv.innerHTML = "";
+  
+    if (!upiID || !amount) {
+      alert("Please enter both UPI ID and amount.");
+      return;
     }
-};
+  
+    // Create the UPI payment string
+    const upiString = `upi://pay?pa=${upiID}&am=${amount}`;
+  
+    // Generate the QR code
+    QRCode.toCanvas(upiString, { width: 200 }, function (error, canvas) {
+      if (error) {
+        console.error(error);
+        alert("Failed to generate QR Code.");
+        return;
+      }
+      qrCodeDiv.appendChild(canvas);
+    });
+  });
+  
