@@ -7,19 +7,27 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 </head>
 <body>
-  <h1>UPI QR Code Generator</h1>
-  <label for="upiID">UPI ID:</label>
-  <input type="text" id="upiID" placeholder="e.g., yourname@bank">
+  <h1 style="margin-left: 20px;">UPI QR Code Generator</h1>
+  <div style="margin-left: 20px; max-width: 400px; display: flex; flex-direction: column; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+      <label for="upiID" style="width: 80px; text-align: left;">UPI ID:</label>
+      <input type="text" id="upiID" placeholder="e.g., yourname@bank" required style="flex: 1;">
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+      <label for="amount" style="width: 80px; text-align: left;">Amount:</label>
+      <input type="number" id="amount" placeholder="Enter amount" required style="flex: 1;">
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+      <label for="note" style="width: 80px; text-align: left;">Note:</label>
+      <input type="text" id="note" placeholder="Enter note (optional)" required style="flex: 1;">
+    </div>
+  </div>
+  <br>
+  <div style="margin-left: 20px;">
+    <button id="generateQR">Generate QR Code</button>
+  </div>
   <br><br>
-  <label for="amount">Amount:</label>
-  <input type="number" id="amount" placeholder="Enter amount">
-  <br><br>
-  <label for="note">Note:</label>
-  <input type="text" id="note"placeholder="Enter note (optional)">
-  <br><br>
-  <button id="generateQR">Generate QR Code</button>
-  <br><br>
-  <div id="qrCode"></div>
+  <div id="qrCode" style="margin-left: 20px;"></div>
   <script src="script.js"></script>
 </body>
 </html>
