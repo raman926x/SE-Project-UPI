@@ -3,6 +3,7 @@ window.onload = function () {
   const urlParams = new URLSearchParams(window.location.search);
   const upiID = urlParams.get("upiId");
   const amount = urlParams.get("amount");
+  const note = urlParams.get("note");
 
   if (upiID) {
     document.getElementById("upiID").value = upiID;
@@ -10,6 +11,10 @@ window.onload = function () {
 
   if (amount) {
     document.getElementById("amount").value = amount;
+  }
+
+  if (note) {
+    document.getElementById("note").value = decodeURIComponent(note);
   }
 
   // Automatically generate the QR code if fields are pre-filled
@@ -22,6 +27,7 @@ window.onload = function () {
 function generateQRCode() {
   const upiID = document.getElementById("upiID").value.trim();
   const amount = document.getElementById("amount").value.trim();
+  const note = document.getElementById("note").value.trim();
   const qrCodeDiv = document.getElementById("qrCode");
 
   // Clear any existing QR code
@@ -33,7 +39,11 @@ function generateQRCode() {
   }
 
   // Create the UPI payment string
-  const upiString = `upi://pay?pa=${upiID}&am=${amount}`;
+  let upiString = `upi://pay?pa=${upiID}&am=${amount}`;
+  if (note) {
+    upiString += `&tn=${encodeURIComponent(note)}`;
+  }
+  
 
   // Generate the QR code
   QRCode.toCanvas(upiString, { width: 200 }, function (error, canvas) {
