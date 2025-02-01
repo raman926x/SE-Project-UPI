@@ -29,6 +29,7 @@ function generateQRCode() {
   const amount = document.getElementById("amount").value.trim();
   const note = document.getElementById("note").value.trim();
   const qrCodeDiv = document.getElementById("qrCode");
+  const logoUrl = "images/bcgicon.png";
 
   // Clear any existing QR code
   qrCodeDiv.innerHTML = "";
@@ -38,6 +39,7 @@ function generateQRCode() {
     return;
   }
 
+
   // Create the UPI payment string
   let upiString = `upi://pay?pa=${upiID}&am=${amount}`;
   if (note) {
@@ -45,16 +47,61 @@ function generateQRCode() {
   }
   
 
-  // Generate the QR code
-  QRCode.toCanvas(upiString, { width: 200 }, function (error, canvas) {
-    if (error) {
-      console.error(error);
-      alert("Failed to generate QR Code.");
-      return;
-    }
-    qrCodeDiv.appendChild(canvas);
-  });
-}
-
-// Add click event listener for manual QR generation
-document.getElementById("generateQR").addEventListener("click", generateQRCode);
+   // QR configuration
+   const qrSize = 300;
+   const logoSize = qrSize * 0.3; // 20% of QR size
+ 
+   // Generate QR code with error correction
+   QRCode.toCanvas(upiString, {
+     width: qrSize,
+     errorCorrectionLevel: 'H'
+   }, async function (error, canvas) {
+     if (error) {
+       console.error(error);
+       alert("Failed to generate QR Code.");
+       return;
+     }
+ 
+     // Add logo overlay
+     try {
+       await addLogo(canvas, logoUrl, logoSize);
+       qrCodeDiv.appendChild(canvas);
+     } catch (logoError) {
+       console.warn("Logo loading failed, using plain QR code");
+       qrCodeDiv.appendChild(canvas);
+     }
+   });
+ }
+ 
+ // Logo overlay function with error handling
+ function addLogo(canvas, logoUrl, logoSize) {
+   return new Promise((resolve, reject) => {
+     const ctx = canvas.getContext('2d');
+     const logo = new Image();
+ 
+     logo.onload = () => {
+       try {
+         // Calculate centered position
+         const x = (canvas.width - logoSize) / 2;
+         const y = (canvas.height - logoSize) / 2;
+ 
+         // Optional: Add white background
+        //  ctx.fillStyle = '#ffffff';
+         ctx.fillRect(x, y, logoSize, logoSize);
+ 
+         // Draw logo
+         ctx.drawImage(logo, x, y, logoSize, logoSize);
+         resolve();
+       } catch (error) {
+         reject(error);
+       }
+     };
+ 
+     logo.onerror = () => reject(new Error('Logo loading failed'));
+     logo.crossOrigin = "anonymous";
+     logo.src = logoUrl;
+   });
+ }
+ 
+ // Event listener for manual generation
+ document.getElementById("generateQR").addEventListener("click", generateQRCode);
